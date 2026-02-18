@@ -1,49 +1,140 @@
+
+
 <!DOCTYPE html>
 <html lang="ja">
 
 <head>
     <title>ポテチャグjoy</title>
     <meta charset="UTF-8">
-    
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="bmstable" content="header.json" />
+
     <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
     <link rel="icon" href="favicon.ico">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css"
+        rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js">
     </script>
+
+    <!-- 丸ゴシック -->
+    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700&display=swap"
+        rel="stylesheet">
+
+    <style>
+        body {
+            background: linear-gradient(
+                135deg,
+                #e6f7ff 0%,
+                #f3e8ff 45%,
+                #ffe6f5 100%
+            );
+            background-attachment: fixed;
+            font-family: 'M PLUS Rounded 1c', sans-serif;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background-image: radial-gradient(white 1px, transparent 1px);
+            background-size: 40px 40px;
+            opacity: 0.25;
+            pointer-events: none;
+        }
+
+        .navbar {
+            background: #ffd6ec !important;
+            box-shadow: 0 4px 15px rgba(255, 180, 220, 0.3);
+        }
+
+        .navbar-brand {
+            color: #ff6fb5 !important;
+            font-weight: 700;
+            font-size: 1.6rem;
+        }
+
+        .container {
+            margin-top: 30px;
+        }
+
+        .alert, .table {
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(8px);
+            border-radius: 25px;
+            box-shadow: 0 8px 30px rgba(200, 180, 255, 0.25);
+            border: none;
+        }
+
+        .table {
+            overflow: hidden;
+        }
+
+        /* 行高さコンパクト化 */
+        .table td, .table th {
+            padding: 0.35rem 0.5rem !important;
+            font-size: 0.9rem;
+            line-height: 1.2;
+            vertical-align: middle !important;
+        }
+
+        .table thead {
+            background-color: #ffc9e8 !important;
+            color: #ffffff;
+        }
+
+        .table-hover tbody tr:hover {
+            background-color: #ffe4f3 !important;
+            transition: 0.2s;
+        }
+
+        a {
+            color: #ff6fb5;
+            text-decoration: none;
+        }
+
+        a:hover {
+            color: #ff3f9d;
+            text-decoration: underline;
+        }
+    </style>
+
 </head>
 
 <body>
+
     <header class="mb-3">
-        <nav class="navbar navbar-dark bg-dark">
+        <nav class="navbar">
             <div class="container-fluid">
-                <span class="navbar-brand mb-0 h1">ポテチャグjoy</span>
+                <span class="navbar-brand">ポテチャグjoy</span>
             </div>
         </nav>
     </header>
 
     <div class="container">
 
-        <div class="alert alert-success mb-3" role="alert">
+        <div class="alert mb-3" role="alert">
             <p>BMS自作差分まとめ (obj:potechang 等)</p>
             <p>意図的にキー音を加えたりしている差分が多いので苦手な方は注意</p>
-            <p>何かあればTwitterの方に連絡ください:<a href="https://twitter.com/pt10_">@pt10_</a> </p>
+            <p>何かあればTwitterの方に連絡ください:
+                <a href="https://twitter.com/pt10_">@pt10_</a>
+            </p>
             <hr>
-            <p class="mb-0">sl0~6=pt-2 sl7~12=pt-1 / pt0からはst基準 </p>
-            <p class="mb-0"><a href="https://drive.google.com/drive/folders/1bMsulUo7aR5hfAYM8J9fNxfVJJ6DYBKy?usp=sharing">差分と段位(googleドライブ)</a></p>
+            <p class="mb-0">sl0~6=pt-2 sl7~12=pt-1 / pt0からはst基準</p>
+            <p class="mb-0">
+                <a href="https://drive.google.com/drive/folders/1bMsulUo7aR5hfAYM8J9fNxfVJJ6DYBKy?usp=sharing">
+                    差分と段位(googleドライブ)
+                </a>
+            </p>
         </div>
 
-
-        <!--ここから難易度表本体-->
         <div>
-            <table class="table table-light table-striped table-hover table-sm" id="table_int">
+            <table class="table table-striped table-hover table-sm" id="table_int">
             </table>
         </div>
-        <script language="javascript" type="text/javascript">
+
+        <script>
             $(document).ready(function () {
                 $.getJSON($("meta[name=bmstable]").attr("content"), function (header) {
                     $.getJSON(header.data_url, function (information) {
@@ -54,77 +145,49 @@
 
             function makeBMSTable(info, mark) {
                 var x = "";
-                var ev = "";
-                var count = 0;
                 var obj = $("#table_int");
-
-
                 obj.html("");
-                $("<thead class='table-dark'><tr><th>Level</th><th>Title</th><th>Artist</th><th>BPM</th><th>Notes</th><th>T/N</th><th>本体</th><th>差分</th><th>譜面</th><th>Comment</th></tr></thead><tbody>")
+
+                $("<thead><tr><th>Level</th><th>Title</th><th>Artist</th><th>BPM</th><th>Notes</th><th>T/N</th><th>本体</th><th>差分</th><th>譜面</th><th>Comment</th></tr></thead><tbody>")
                     .appendTo(obj);
-                var obj_sep = null;
-                
+
                 for (var i = 0; i < info.length; i++) {
+
                     if (x != info[i].level) {
-                        obj_sep = $("<tr style='text-align:center' id='" + mark + info[i].level +
-                            "'></tr>");
-                        obj_sep.appendTo(obj);
-                        count = 0;
+                        $("<tr style='text-align:center'></tr>").appendTo(obj);
                         x = info[i].level;
                     }
+
                     var str = $("<tr></tr>");
 
+                    $("<td>" + mark + x + "</td>").appendTo(str);
+                    $("<td><a href='http://www.dream-pro.info/~lavalse/LR2IR/search.cgi?mode=ranking&bmsmd5=" +
+                        info[i].md5 + "' target='_blank'>" + info[i].title + "</a></td>").appendTo(str);
+                    $("<td>" + info[i].artist + "</td>").appendTo(str);
+                    $("<td>" + info[i].BPM + "</td>").appendTo(str);
+                    $("<td>" + info[i].Notes + "</td>").appendTo(str);
+                    $("<td>" + info[i].TN + "</td>").appendTo(str);
+                    $("<td><a href='" + info[i].url + "' target='_blank'>本体</a></td>").appendTo(str);
 
-                    // Level
-                    $("<td width='5%'>" + mark + x + "</td>").appendTo(str);
+                    $("<td>" +
+                        (info[i].url_diff && info[i].url_diff.trim() !== ""
+                            ? "<a href='" + info[i].url_diff + "' target='_blank'>差分</a>"
+                            : "") +
+                        "</td>").appendTo(str);
 
-                    // Title
-                    $("<td width='25%'>" +
-                        "<a href='http://www.dream-pro.info/~lavalse/LR2IR/search.cgi?mode=ranking&bmsmd5=" + info[
-                            i]
-                        .md5 + "' target='_blank'>" + info[i].title + "</a></td>").appendTo(str);
+                    $("<td><a href='https://bms-score-viewer.pages.dev/view?md5=" +
+                        info[i].md5 + "' target='_blank'>view</a></td>").appendTo(str);
 
-                    // Artist
-                    $("<td width='20%'>" + info[i].artist + "</td>").appendTo(str);
+                    $("<td>" + info[i].comment + "</td>").appendTo(str);
 
-                    // BPM
-                    $("<td width='5%'>" + info[i].BPM+ "</td>").appendTo(str);
-
-                    // Notes
-                    $("<td width='5%'>" + info[i].Notes + "</td>").appendTo(str);
-
-                    // T/N比
-                    $("<td width='5%'>" + info[i].TN + "</td>").appendTo(str);
-
-                    // 本体DL
-                    $("<td width='5%'>" +
-                        "<a href='" + info[i].url + "' target='_blank'>" + "本体" + "</a></td>").appendTo(str);
-                    
-                    // 差分DL
-                    $("<td width='5%'>" +
-                    (info[i].url_diff && info[i].url_diff.trim() !== ""
-                    ? "<a href='" + info[i].url_diff + "' target='_blank'>差分</a>"
-                    : "") +
-                    "</td>"
-                    ).appendTo(str);
-
-                    
-                    // Chartview
-                    $("<td width='5%'>" +
-                        "<a href='https://bms-score-viewer.pages.dev/view?md5=" + info[
-                            i]
-                        .md5 + "' target='_blank'>" + "view" + "</a></td>").appendTo(str);
-                    
-                    // Comment
-                    $("<td width='20%'>" + info[i].comment + "</td>").appendTo(str);
                     str.appendTo(obj);
-                    count++;
-
                 }
+
                 $("</tbody>").appendTo(obj);
-                
             }
         </script>
+
     </div>
 
+</body>
 </html>
